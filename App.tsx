@@ -9,7 +9,7 @@ import PageShell from './components/PageShell';
 import type { StudySession, UploadedPdf } from './types';
 import { saveStudySession as saveSessionToStorage, getStudyHistory as getHistoryFromStorage } from './services/localStorageService';
 
-// Definindo process.env.API_KEY para fins de demonstração, se não estiver definido globalmente.
+// Definindo import.meta.env.VITE_GEMINI_API_KEY para fins de demonstração, se não estiver definido globalmente.
 // Em um ambiente real, isso seria configurado no processo de build ou servidor.
 if (typeof process === 'undefined') {
   // @ts-ignore
@@ -19,9 +19,9 @@ if (typeof process === 'undefined') {
 const PLACEHOLDER_API_KEY = "COLE_AQUI_SUA_CHAVE_API_GEMINI_REAL"; // Placeholder mais óbvio
 
 // @ts-ignore
-if (!process.env.API_KEY || process.env.API_KEY === PLACEHOLDER_API_KEY) {
+if (!import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY === PLACEHOLDER_API_KEY) {
   // @ts-ignore
-  process.env.API_KEY = PLACEHOLDER_API_KEY; 
+  import.meta.env.VITE_GEMINI_API_KEY = PLACEHOLDER_API_KEY; 
   console.warn(`ATENÇÃO: Chave da API do Gemini não configurada ou usando valor placeholder ("${PLACEHOLDER_API_KEY}"). 
 Por favor, configure a variável de ambiente API_KEY ou edite App.tsx (linha ~20) com sua chave real. 
 Funcionalidades de IA podem não operar corretamente.`);
