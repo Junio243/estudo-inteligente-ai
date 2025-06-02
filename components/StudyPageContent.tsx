@@ -146,7 +146,7 @@ const StudyPageContent: React.FC<StudyPageContentProps> = ({ session: initialSes
   )};
   
   // @ts-ignore
-  const apiKeyIsPlaceholder = process.env.API_KEY === "COLE_AQUI_SUA_CHAVE_API_GEMINI_REAL";
+  const apiKeyIsPlaceholder = import.meta.env.VITE_GEMINI_API_KEY === "COLE_AQUI_SUA_CHAVE_API_GEMINI_REAL";
 
 
   if (!extractedText && !initialSession.summary) { 

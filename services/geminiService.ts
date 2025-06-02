@@ -3,7 +3,7 @@ import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import type { GlossaryEntry, Question, VideoSuggestion, GeminiMCQResponseItem, GeminiGlossaryResponseItem } from '../types';
 import { GEMINI_TEXT_MODEL, MAX_TOPICS } from '../constants'; // NUM_MCQS e NUM_SIMULADO_MCQS removidos
 
-// @ts-ignore Certifique-se que process.env.API_KEY está disponível
+// @ts-ignore Certifique-se que import.meta.env.VITE_GEMINI_API_KEY está disponível
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 if (!apiKey || apiKey === "COLE_AQUI_SUA_CHAVE_API_GEMINI_REAL") { // Modificado para corresponder ao App.tsx
   console.error("Chave da API do Gemini não configurada ou é um placeholder. As chamadas para a API falharão. Verifique App.tsx ou suas variáveis de ambiente.");
