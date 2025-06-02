@@ -88,7 +88,7 @@ const PageShell: React.FC<PageShellProps> = ({ children }) => {
       <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
           <p>&copy; {new Date().getFullYear()} {APP_NAME}. Todos os direitos reservados.</p>
-          <p>Feito com <span className="text-red-500 animate-pulse">❤️</span> para estudantes brasileiros.</p>
+          <p>Feito Por Alexandre Junio Canuto Lopes <span className="text-red-500 animate-pulse">❤️</span> para estudantes em geral .</p>
         </div>
       </footer>
     </div>
