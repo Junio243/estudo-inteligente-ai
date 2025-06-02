@@ -33,7 +33,7 @@ Acesse **https://estudo-inteligente-ai.onrender.com** ou assista ao GIF/print em
 
 ---
 
-## 🔑 Variáveis de Ambiente
+## ✨ Demonstração rápida
 
-```env
-VITE_GEMINI_API_KEY= SUA_CHAVE_AQUI
+```text
+Arraste ▶ Solte PDF ▶ Resumo instantâneo ▶ Gerar Quiz ▶ Assista a videoaulas
