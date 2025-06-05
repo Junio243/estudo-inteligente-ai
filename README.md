@@ -37,3 +37,4 @@ Acesse **https://estudo-inteligente-ai.onrender.com** ou assista ao GIF/print em
 
 ```text
 Arraste ▶ Solte PDF ▶ Resumo instantâneo ▶ Gerar Quiz ▶ Assista a videoaulas
+```
