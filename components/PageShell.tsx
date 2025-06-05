@@ -15,7 +15,12 @@ const PageShell: React.FC<PageShellProps> = ({ children }) => {
   const UploadIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>;
   const StudyIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>;
   const HistoryIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
-  const BrainIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-sky-500 dark:text-sky-400"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25  cerveau 7.5V6" /><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 7.5c0 1.21.99 2.204 2.202 2.204H10.8V12h2.4v-2.296h.348c1.212 0 2.202-.993 2.202-2.204V6A2.25 2.25 0 0013.5 3.75h-3A2.25 2.25 0 008.25 6v1.5zM9.75 12H7.528a2.25 2.25 0 00-2.245 2.05L4.5 21h15l-.783-6.95A2.25 2.25 0 0016.472 12H14.25" /></svg>;
+  // Usamos um emoji para representar o cérebro e evitar problemas com o caminho SVG incorreto
+  const BrainIcon = () => (
+    <span role="img" aria-label="Cérebro" className="text-2xl">
+      🧠
+    </span>
+  );
 
 
   const navItems = [
