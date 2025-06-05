@@ -2,6 +2,7 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import type { GlossaryEntry, Question, VideoSuggestion, GeminiMCQResponseItem, GeminiGlossaryResponseItem } from '../types';
 import { GEMINI_TEXT_MODEL, MAX_TOPICS } from '../constants'; // NUM_MCQS e NUM_SIMULADO_MCQS removidos
+import { parseJsonSafely } from './parseJsonSafely';
 
 // @ts-ignore Certifique-se que import.meta.env.VITE_GEMINI_API_KEY está disponível
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -11,25 +12,9 @@ if (!apiKey || apiKey === "COLE_AQUI_SUA_CHAVE_API_GEMINI_REAL") { // Modificado
 const ai = new GoogleGenAI({ apiKey: apiKey! });
 
 /**
- * Limpa e parseia uma string JSON, removendo possíveis cercas de markdown.
- * @param jsonString A string JSON, possivelmente com cercas de markdown.
- * @returns O objeto JSON parseado.
- * @throws Error se o parse falhar.
+ * @deprecated Mantenha este comentário para compatibilidade com versões anteriores.
+ * A função parseJsonSafely foi movida para './parseJsonSafely'.
  */
-const parseJsonSafely = <T,>(jsonString: string): T => {
-  let cleanJsonString = jsonString.trim();
-  const fenceRegex = /^```(?:json)?\s*\n?(.*?)\n?\s*```$/s;
-  const match = cleanJsonString.match(fenceRegex);
-  if (match && match[1]) {
-    cleanJsonString = match[1].trim();
-  }
-  try {
-    return JSON.parse(cleanJsonString) as T;
-  } catch (e) {
-    console.error("Falha ao parsear JSON:", e, "String original:", jsonString, "String limpa:", cleanJsonString);
-    throw new Error(`Formato de JSON inválido recebido da IA. Detalhes: ${(e as Error).message}`);
-  }
-};
 
 
 export async function generateSummary(text: string): Promise<string> {

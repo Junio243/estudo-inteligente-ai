@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "rm -rf test-dist && tsc services/parseJsonSafely.ts --module es2022 --target es2020 --outDir test-dist/services && node --test tests/parseJsonSafely.test.js && rm -rf test-dist"
   },
   "dependencies": {
     "react-dom": "^19.1.0",
