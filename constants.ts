@@ -1,7 +1,7 @@
 // constants.ts
 
 export const APP_NAME = "Estudo Inteligente AI";
-export const GEMINI_TEXT_MODEL = "gemini-2.5-flash"; // Modelo para texto
+export const GEMINI_TEXT_MODEL = "gemini-2.5-flash-lite"; // Modelo para texto
 // Não estamos usando geração de imagem nesta app.
 
 export const MAX_TOPICS = 7; // Máximo de tópicos a serem gerados
