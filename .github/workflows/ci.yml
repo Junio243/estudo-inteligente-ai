@@ -13,9 +13,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
+          node-version: 22
+      # sem cache: repo não tem package-lock.json committed
+      - run: npm install --no-audit --no-fund
       - name: Tests
         run: npm test
       - name: Build
