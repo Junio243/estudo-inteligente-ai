@@ -16,22 +16,26 @@ export function getStudyHistory(): StudySession[] {
   return [];
 }
 
-export function saveStudySession(session: StudySession): void {
+export function saveStudySession(session: StudySession): boolean {
   try {
     const history = getStudyHistory();
     // Remove sessão antiga se existir com mesmo ID, para atualizar
     const updatedHistory = history.filter(s => s.id !== session.id);
     updatedHistory.unshift(session); // Adiciona a nova/atualizada no início
     localStorage.setItem(LOCAL_STORAGE_HISTORY_KEY, JSON.stringify(updatedHistory));
+    return true;
   } catch (error) {
     console.error("Erro ao salvar sessão no localStorage:", error);
+    return false;
   }
 }
 
-export function clearStudyHistory(): void {
+export function clearStudyHistory(): boolean {
   try {
     localStorage.removeItem(LOCAL_STORAGE_HISTORY_KEY);
+    return true;
   } catch (error) {
     console.error("Erro ao limpar histórico do localStorage:", error);
+    return false;
   }
 }

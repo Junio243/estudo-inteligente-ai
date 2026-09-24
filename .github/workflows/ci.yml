@@ -14,8 +14,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      # sem cache: repo não tem package-lock.json committed
-      - run: npm install --no-audit --no-fund
+          cache: npm
+      - run: npm ci
+      - name: Type check
+        run: npm run type-check
       - name: Tests
         run: npm test
       - name: Build

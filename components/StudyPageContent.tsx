@@ -20,7 +20,7 @@ const XIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" 
 
 interface StudyPageContentProps {
   session: StudySession;
-  onSaveSession: (session: StudySession) => void;
+  onSaveSession: (session: StudySession) => boolean;
 }
 
 const StudyPageContent: React.FC<StudyPageContentProps> = ({ session: initialSession, onSaveSession }) => {
@@ -43,7 +43,7 @@ const StudyPageContent: React.FC<StudyPageContentProps> = ({ session: initialSes
 
 
   const { 
-    extractedText, pdfName, summary, topics, glossary, questions, videoSuggestions, userAnswers, score,
+    extractedText, pdfName, summary, topics, glossary, questions, videoSuggestions, score,
     // Campos do simulado removidos da desestruturação
   } = currentSession;
 
@@ -130,8 +130,12 @@ const StudyPageContent: React.FC<StudyPageContentProps> = ({ session: initialSes
 
 
   const handleSave = () => {
-    onSaveSession(currentSession);
-    alert(UI_TEXTS.saveSession + " com sucesso!");
+    if (onSaveSession(currentSession)) {
+      setError(null);
+      alert(UI_TEXTS.saveSession + " com sucesso!");
+    } else {
+      setError('Não foi possível salvar neste navegador. O armazenamento pode estar cheio ou bloqueado. Mantenha esta página aberta para não perder sua sessão.');
+    }
   };
 
   const renderSection = <T,>(title: string, IconComponent: React.FC, isLoading: boolean, data: T | T[] | undefined, renderContent: (data: T | T[]) => React.ReactNode, condition = true) => {
@@ -248,13 +252,15 @@ const StudyPageContent: React.FC<StudyPageContentProps> = ({ session: initialSes
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {(vids as VideoSuggestion[]).map(video => (
             <Card key={video.id} className="flex flex-col">
-              <img src={video.thumbnailUrl} alt={video.title} className="w-full h-40 object-cover rounded-t-lg" />
+              {video.thumbnailUrl && !video.youtubeUrl.includes('/results?') && <img src={video.thumbnailUrl} alt={video.title} className="w-full h-40 object-cover rounded-t-lg" />}
               <div className="p-4 flex flex-col flex-grow">
                 <h4 className="font-semibold text-md mb-1 text-gray-800 dark:text-gray-200 flex-grow">{video.title}</h4>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">Duração: {video.duration}</p>
-                <Button onClick={() => window.open(video.youtubeUrl, '_blank')} size="sm" variant="outline" className="w-full mt-auto">
-                  {UI_TEXTS.watchVideo}
-                </Button>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                  {video.youtubeUrl.includes('/results?') ? 'Escolha uma aula nos resultados do YouTube.' : video.duration && `Duração: ${video.duration}`}
+                </p>
+                <a href={video.youtubeUrl} target="_blank" rel="noopener noreferrer" className="block rounded-lg border border-sky-600 px-4 py-2 text-center text-sm font-semibold text-sky-700 dark:text-sky-300 mt-auto">
+                  {video.youtubeUrl.includes('/results?') ? 'Buscar no YouTube' : UI_TEXTS.watchVideo}
+                </a>
               </div>
             </Card>
           ))}

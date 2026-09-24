@@ -1,15 +1,16 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import Button from './ui/Button';
 import LoadingSpinner from './ui/LoadingSpinner';
 import { UI_TEXTS } from '../constants';
 import type { UploadedPdf } from '../types';
-import * as pdfjsLib from 'pdfjs-dist/build/pdf.mjs';
+import * as pdfjsLib from 'pdfjs-dist';
+import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 
 // Configura o worker para pdf.js
 if (typeof window !== 'undefined') {
   // Usa o caminho do módulo que será resolvido pelo importmap
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.mjs';
+  pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
 }
 
 
