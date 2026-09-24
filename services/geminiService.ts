@@ -1,6 +1,6 @@
 // services/geminiService.ts
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
-import type { GlossaryEntry, Question, VideoSuggestion, GeminiMCQResponseItem, GeminiGlossaryResponseItem } from '../types';
+import type { GlossaryEntry, Question, GeminiMCQResponseItem, GeminiGlossaryResponseItem } from '../types';
 import { GEMINI_TEXT_MODEL, MAX_TOPICS } from '../constants'; // NUM_MCQS e NUM_SIMULADO_MCQS removidos
 import { parseJsonSafely } from './parseJsonSafely';
 
@@ -9,7 +9,18 @@ const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 if (!apiKey || apiKey === "COLE_AQUI_SUA_CHAVE_API_GEMINI_REAL") { // Modificado para corresponder ao App.tsx
   console.error("Chave da API do Gemini não configurada ou é um placeholder. As chamadas para a API falharão. Verifique App.tsx ou suas variáveis de ambiente.");
 }
-const ai = new GoogleGenAI({ apiKey: apiKey! });
+let ai: GoogleGenAI | undefined;
+function getAI(): GoogleGenAI {
+  if (!apiKey || apiKey === 'COLE_AQUI_SUA_CHAVE_API_GEMINI_REAL') {
+    throw new Error('Configure VITE_GEMINI_API_KEY para gerar material de estudo.');
+  }
+  return ai ??= new GoogleGenAI({ apiKey });
+}
+function responseText(response: GenerateContentResponse): string {
+  const text = response.text?.trim();
+  if (!text) throw new Error('A IA não retornou conteúdo. Tente novamente com outro trecho.');
+  return text;
+}
 
 /**
  * @deprecated Mantenha este comentário para compatibilidade com versões anteriores.
@@ -22,11 +33,11 @@ export async function generateSummary(text: string): Promise<string> {
   const prompt = `Você é um assistente de IA especializado em educação. Resuma o seguinte texto acadêmico de forma clara e concisa, destacando os principais conceitos em português do Brasil. O resumo deve ser adequado para um estudante que está revisando a matéria. Limite o resumo a cerca de 200-300 palavras. Texto:\n\n"${text}"`;
   
   try {
-    const response: GenerateContentResponse = await ai.models.generateContent({
+    const response: GenerateContentResponse = await getAI().models.generateContent({
       model: model,
       contents: prompt,
     });
-    return response.text.trim();
+    return responseText(response);
   } catch (error) {
     console.error("Erro ao gerar resumo:", error);
     throw new Error(`Falha ao gerar resumo: ${(error as Error).message}`);
@@ -38,11 +49,11 @@ export async function generateTopics(text: string): Promise<string[]> {
   const prompt = `Você é um assistente de IA especializado em educação. Analise o seguinte texto e identifique até ${MAX_TOPICS} tópicos principais abordados. Liste os tópicos em português do Brasil, cada um em uma nova linha, sem numeração ou marcadores. Texto:\n\n"${text}"`;
 
   try {
-    const response: GenerateContentResponse = await ai.models.generateContent({
+    const response: GenerateContentResponse = await getAI().models.generateContent({
       model: model,
       contents: prompt,
     });
-    return response.text.trim().split('\n').filter(topic => topic.trim() !== '');
+    return responseText(response).split('\n').filter(topic => topic.trim() !== '');
   } catch (error) {
     console.error("Erro ao gerar tópicos:", error);
     throw new Error(`Falha ao gerar tópicos: ${(error as Error).message}`);
@@ -64,12 +75,12 @@ export async function generateGlossary(text: string): Promise<GlossaryEntry[]> {
   \`\`\``;
 
   try {
-    const response: GenerateContentResponse = await ai.models.generateContent({
+    const response: GenerateContentResponse = await getAI().models.generateContent({
       model: model,
       contents: prompt,
       config: { responseMimeType: "application/json" }
     });
-    const parsedData = parseJsonSafely<GeminiGlossaryResponseItem[]>(response.text);
+    const parsedData = parseJsonSafely<GeminiGlossaryResponseItem[]>(responseText(response));
     return parsedData;
   } catch (error) {
     console.error("Erro ao gerar glossário:", error);
@@ -117,7 +128,7 @@ Lembre-se, a saída final deve ser um array JSON contendo as questões.`;
 
   try {
     console.log("[geminiService] Gerando MCQs (máximo possível)...");
-    const response: GenerateContentResponse = await ai.models.generateContent({
+    const response: GenerateContentResponse = await getAI().models.generateContent({
       model: model,
       contents: prompt,
       config: { responseMimeType: "application/json" }
@@ -125,7 +136,7 @@ Lembre-se, a saída final deve ser um array JSON contendo as questões.`;
     
     console.log("[geminiService] Resposta BRUTA da API (MCQs):\n", response.text);
 
-    const parsedData = parseJsonSafely<GeminiMCQResponseItem[]>(response.text);
+    const parsedData = parseJsonSafely<GeminiMCQResponseItem[]>(responseText(response));
     console.log("[geminiService] Dados parseados (MCQs):", parsedData);
     
     if (!Array.isArray(parsedData)) { // Não checar parsedData.length === 0 aqui, pode ser válido
@@ -149,37 +160,7 @@ Lembre-se, a saída final deve ser um array JSON contendo as questões.`;
 
 // generateSimuladoMCQs REMOVIDA
 
-// Simulação para sugestões de vídeo, já que a API do YouTube requer configuração complexa
-export async function generateVideoSuggestions(query: string): Promise<VideoSuggestion[]> {
-  console.log(`Simulando busca no YouTube por: "${query}"`);
-  // Simula uma chamada de API
-  await new Promise(resolve => setTimeout(resolve, 1000)); 
-
-  // Remove aspas da query para melhor resultado em placeholders
-  const cleanQuery = query.replace(/"/g, '');
-
-  const mockVideos: VideoSuggestion[] = [
-    { 
-      id: 'video1', 
-      title: `Videoaula Completa sobre ${cleanQuery}`, 
-      thumbnailUrl: `https://picsum.photos/seed/${encodeURIComponent(cleanQuery)}1/320/180`, 
-      duration: "45:20", 
-      youtubeUrl: `https://www.youtube.com/results?search_query=${encodeURIComponent("videoaula " + cleanQuery)}` 
-    },
-    { 
-      id: 'video2', 
-      title: `Resumo Rápido de ${cleanQuery} em 10 Minutos`, 
-      thumbnailUrl: `https://picsum.photos/seed/${encodeURIComponent(cleanQuery)}2/320/180`, 
-      duration: "10:05", 
-      youtubeUrl: `https://www.youtube.com/results?search_query=${encodeURIComponent("resumo " + cleanQuery)}`
-    },
-    { 
-      id: 'video3', 
-      title: `Exercícios Resolvidos de ${cleanQuery}`, 
-      thumbnailUrl: `https://picsum.photos/seed/${encodeURIComponent(cleanQuery)}3/320/180`, 
-      duration: "25:00", 
-      youtubeUrl: `https://www.youtube.com/results?search_query=${encodeURIComponent("exercícios resolvidos " + cleanQuery)}`
-    },
-  ];
-  return mockVideos;
+import { buildVideoSearches } from './videoSuggestions';
+export async function generateVideoSuggestions(query: string) {
+  return buildVideoSearches(query);
 }

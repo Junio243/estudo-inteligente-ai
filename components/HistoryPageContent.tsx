@@ -26,6 +26,7 @@ const TrashIcon = () => (
 const HistoryPageContent: React.FC<HistoryPageContentProps> = ({ onLoadSession }) => {
   const [history, setHistory] = useState<StudySession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setHistory(getStudyHistory());
@@ -34,8 +35,12 @@ const HistoryPageContent: React.FC<HistoryPageContentProps> = ({ onLoadSession }
 
   const handleClearHistory = () => {
     if (window.confirm("Tem certeza que deseja apagar todo o histórico de estudos? Esta ação não pode ser desfeita.")) {
-      clearHistoryFromStorage();
-      setHistory([]);
+      if (clearHistoryFromStorage()) {
+        setHistory([]);
+        setError(null);
+      } else {
+        setError('Não foi possível limpar o histórico. Verifique as permissões de armazenamento do navegador.');
+      }
     }
   };
 
@@ -45,6 +50,7 @@ const HistoryPageContent: React.FC<HistoryPageContentProps> = ({ onLoadSession }
 
   return (
     <div className="max-w-4xl mx-auto">
+      {error && <p role="alert" className="mb-4 text-red-600 dark:text-red-400">{error}</p>}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-200 flex items-center">
           <HistoryIcon />
@@ -98,21 +104,5 @@ const HistoryPageContent: React.FC<HistoryPageContentProps> = ({ onLoadSession }
     </div>
   );
 };
-
-// Helper CSS for truncation (Tailwind doesn't have multi-line truncate by default)
-// Garante que o estilo seja adicionado apenas uma vez
-if (!document.getElementById('truncate-style')) {
-    const style = document.createElement('style');
-    style.id = 'truncate-style';
-    style.innerHTML = `
-    .truncate-3-lines {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;  
-        overflow: hidden;
-    }
-    `;
-    document.head.appendChild(style);
-}
 
 export default HistoryPageContent;
