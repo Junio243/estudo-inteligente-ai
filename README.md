@@ -2,6 +2,11 @@
 
 [![Status do Site](https://img.shields.io/website?down_message=offline&up_message=online&url=https%3A%2F%2Festudo-inteligente-ai.onrender.com)](https://estudo-inteligente-ai.onrender.com)
 ![Render](https://img.shields.io/badge/Deploy-Render-blue)
+[![CI](https://github.com/Junio243/estudo-inteligente-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/Junio243/estudo-inteligente-ai/actions/workflows/ci.yml)
+
+## 📸 Screenshots
+
+> Prints em `docs/screenshots/` (`home.png`, `quiz.png`).
 
 Plataforma brasileira que transforma PDFs em resumos, gera questionários de múltipla escolha e sugere videoaulas – tudo em PT-BR – para turbinar seus estudos.
 
